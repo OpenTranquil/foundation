@@ -26,6 +26,7 @@ typedef struct OperatorFunc {
 typedef struct ComputeNode {
     NodeType type;
 
+    double grad;
     union {
         struct {
             struct Node *left;
@@ -74,7 +75,7 @@ double op_add_forword(struct ComputeNode *node) {
 }
 
 double op_add_backword(struct ComputeNode *node) {
-    return 0; //TODO
+    return 1;
 }
 
 OperatorFunc op_add = {
@@ -107,15 +108,17 @@ double backward(ComputeNode *node) {
     if (node->type == CONSTANT) {
         return 0;
     }
-    return node->operator.op->forword(node);
+    return node->operator.op->backward(node);
 }
 
 // f = (ax + b)^2
-// Z = (ax + b)
-// F = Z^2
+// Z = ax
+// Y = Z + b
+// F = Y ^ 2
 
-// fx' = FZ'Zx'
-// fx' = 2Za
+// fx' = FY'YZ'Zx'
+// fx' = 2Y * 1 * a
+// fx' = 2(ax +b) * 1 * a
 // fx' = 2(ax+b)a
 
 double fx(double x, double a, double b) {
@@ -167,8 +170,8 @@ int main(int argc, char *argv[]) {
     node_add.operator.op = &op_add;
 
     node_mul.type = BINARY_OPERATOR;
-    node_mul.operator.left = &node_a;
-    node_mul.operator.right = &node_x;
+    node_mul.operator.left = &node_x;
+    node_mul.operator.right = &node_a;
     node_mul.operator.op = &op_mul;
 
     printf("ACTUAL val: %f\n", forword(&node_pow));
