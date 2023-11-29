@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS=-c -Wall
 LDFLAGS=
 
-OBJS = grad.o
+OBJS = grad.o main.c
 
 all: grad
 

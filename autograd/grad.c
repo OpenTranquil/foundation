@@ -2,46 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-typedef enum NodeType {
-    VARIABLE = 0,
-    CONSTANT,
-    BINARY_OPERATOR,
-} NodeType;
-
-typedef enum OperatorType {
-    MUL = 0,
-    ADD,
-    DIV,
-    POW,
-    LOG,
-    LN,
-} OperatorType;
-
-typedef struct OperatorFunc {
-    OperatorType type;
-    double (*forword)(struct ComputeNode *node);
-    double (*backward)(struct ComputeNode *node);
-} OperatorFunc;
-
-typedef struct ComputeNode {
-    NodeType type;
-    struct ComputeNode *parent;
-
-    double grad;
-    union {
-        struct {
-            struct Node *left;
-            struct Node *right;
-            OperatorFunc *op;
-        } operator;
-        struct {
-            double val;
-        } variable;
-        struct {
-            double val;
-        } constant;
-    };
-} ComputeNode;
+#include "grad.h"
 
 double forword(ComputeNode *node) {
     if (node->type == VARIABLE) {
@@ -133,83 +94,122 @@ OperatorFunc op_mul = {
     .backward = op_mul_backword,
 };
 
-// f = (ax + b)^2
-// Z = ax
-// Y = Z + b
-// F = Y ^ 2
+ComputeNode *Pow(ComputeNode *left, ComputeNode *right) {
+    ComputeNode *node = (ComputeNode *)malloc(sizeof(ComputeNode));
+    if (node == NULL) {
+        printf("ComputeNode malloc failed!\n");
+        exit(1);
+    }
+    node->type = BINARY_OPERATOR;
+    node->grad = 1.0f;
+    node->parent == NULL;
 
-// fx' = FY'YZ'Zx'
-// fx' = 2Y * 1 * a
-// fx' = 2(ax +b) * 1 * a
-// fx' = 2(ax+b)a
+    node->operator.left = left;
+    node->operator.right = right;
+    node->operator.op = &op_pow;
 
-double fx(double x, double a, double b) {
-    double val = pow((a * x + b), 2);
-    return val;
+    if (left == NULL || right == NULL) {
+        printf("The operand of pow should not not be NULL!\n");
+        exit(1);
+    }
+    left->parent = node;
+    right->parent = node;
+    return node;
 }
 
-double fdx(double x, double a, double b) {
-    double grad = 2.0f * (a * x + b) * a;
-    return grad;
+ComputeNode *Add(ComputeNode *left, ComputeNode *right) {
+    ComputeNode *node = (ComputeNode *)malloc(sizeof(ComputeNode));
+    if (node == NULL) {
+        printf("ComputeNode malloc failed!\n");
+        exit(1);
+    }
+    node->type = BINARY_OPERATOR;
+    node->grad = 1.0f;
+    node->parent == NULL;
+
+    node->operator.left = left;
+    node->operator.right = right;
+
+    node->operator.op = &op_add;
+
+    if (left == NULL || right == NULL) {
+        printf("The operand of add should not not be NULL!\n");
+        exit(1);
+    }
+    left->parent = node;
+    right->parent = node;
+    return node;
 }
 
-int main(int argc, char *argv[]) {
-    double a = 5.1f;
-    double x = 6.3f;
-    double b = 2.1f;
-    printf("a:%f, b:%f, x:%f \n", a, b, x);
-    double exp_val = fx(x, a, b);
-    double exp_grad = fdx(x, a, b);
-    printf("EXPECTED val:%f, grad:%f\n", exp_val, exp_grad);
+ComputeNode *Mul(ComputeNode *left, ComputeNode *right) {
+    ComputeNode *node = (ComputeNode *)malloc(sizeof(ComputeNode));
+    if (node == NULL) {
+        printf("ComputeNode malloc failed!\n");
+        exit(1);
+    }
+    node->type = BINARY_OPERATOR;
+    node->grad = 1.0f;
+    node->parent == NULL;
+    node->operator.left = left;
+    node->operator.right = right;
+    node->operator.op = &op_mul;
 
-    ComputeNode node_a;
-    ComputeNode node_mul;
-    ComputeNode node_x;
-    ComputeNode node_add;
-    ComputeNode node_b;
-    ComputeNode node_pow;
-    ComputeNode node_2;
+    if (left == NULL || right == NULL) {
+        printf("The operand of mul should not not be NULL!\n");
+        exit(1);
+    }
+    left->parent = node;
+    right->parent = node;
+    return node;
+}
 
-    // variable node init
-    node_2.type = CONSTANT;
-    node_2.constant.val = 2.0f;
-    node_2.grad = 1.0f;
-    node_a.type = CONSTANT;
-    node_a.constant.val = a;
-    node_a.grad = 1.0f;
-    node_x.type = VARIABLE;
-    node_x.variable.val = x;
-    node_x.grad = 1.0f;
-    node_b.type = CONSTANT;
-    node_b.constant.val = b;
-    node_b.grad = 1.0f;
+ComputeNode *Param(double init_val, const char *name) {
+    ComputeNode *node = (ComputeNode *)malloc(sizeof(ComputeNode));
+    if (node == NULL) {
+        printf("ComputeNode malloc failed!\n");
+        exit(1);
+    }
+    node->type = VARIABLE;
+    node->grad = 1.0f;
+    node->parent == NULL;
 
-    // operator node init
-    node_pow.type = BINARY_OPERATOR;
-    node_pow.grad = 1.0f;
-    node_pow.operator.left = &node_add;
-    node_pow.operator.right = &node_2;
-    node_pow.operator.op = &op_pow;
+    node->variable.val = init_val;
+    node->variable.name = name;
+    return node;
+}
 
-    node_add.type = BINARY_OPERATOR;
-    node_add.grad = 1.0f;
-    node_add.operator.left = &node_mul;
-    node_add.operator.right = &node_b;
-    node_add.operator.op = &op_add;
+ComputeNode *Variable(double init_val, const char *name) {
+    ComputeNode *node = (ComputeNode *)malloc(sizeof(ComputeNode));
+    if (node == NULL) {
+        printf("ComputeNode malloc failed!\n");
+        exit(1);
+    }
+    node->type = VARIABLE;
+    node->grad = 1.0f;
+    node->parent == NULL;
 
-    node_mul.type = BINARY_OPERATOR;
-    node_mul.grad = 1.0f;
-    node_mul.operator.left = &node_x;
-    node_mul.operator.right = &node_a;
-    node_mul.operator.op = &op_mul;
+    node->variable.val = init_val;
+    node->variable.name = name;
+    return node;
+}
 
-    node_2.parent = &node_pow;
-    node_a.parent = &node_mul;
-    node_x.parent = &node_mul;
-    node_b.parent = &node_add;
-    node_add.parent = &node_pow;
-    node_mul.parent = &node_add;
+ComputeNode *Constant(double init_val) {
+    ComputeNode *node = (ComputeNode *)malloc(sizeof(ComputeNode));
+    if (node == NULL) {
+        printf("ComputeNode malloc failed!\n");
+        exit(1);
+    }
+    node->type = CONSTANT;
+    node->grad = 1.0f;
+    node->parent == NULL;
 
-    printf("ACTUAL val: %f, grad:%f\n", forword(&node_pow), backward(&node_x));
-    return 0;
+    node->constant.val = init_val;
+    return node;
+}
+
+double Forword(ComputeNode *node) {
+    return forword(node);
+}
+double Backword(ComputeNode *node) {
+    return backward(node);
 }
