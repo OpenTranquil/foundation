@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include "grad.h"
+#include "autograd/grad.h"
 
 // f = (ax + b)^2
 // Z = ax
