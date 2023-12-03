@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "autograd/grad.h"
+#include "tensor/tensor.h"
 
 // f = (ax + b)^2
 // Z = ax
@@ -35,5 +36,11 @@ int main(int argc, char *argv[]) {
     ComputeNode *x = Variable(xv, "x");
     ComputeNode *fx = Pow(Add(Mul(x, Param(av, "a")), Param(bv, "b")), Constant(2.0f));
     printf("ACTUAL2 val: %f, grad:%f\n", Forword(fx), Backword(x));
+
+
+    NamedTensor *tensor = Tensor();
+    tensor->addDimension(tensor, Dimension("width", 32));
+    tensor->addDimension(tensor, Dimension("height", 32));
+    tensor->addDimension(tensor, Dimension("depth", 4));
     return 0;
 }

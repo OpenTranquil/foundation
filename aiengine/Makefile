@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS=-c -Wall
 LDFLAGS=
 
-OBJS_AUTOGRAD = autograd/grad.o main.c
+OBJS_AUTOGRAD = autograd/grad.o tensor/tensor.c main.c
 
 all: grad
 
