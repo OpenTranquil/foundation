@@ -4,7 +4,8 @@
 #include <stddef.h>
 
 struct Dimension *tensor_add_dimension(struct NamedTensor *tensor, struct Dimension *dimension) {
-
+    tensor->dimension_nums++;
+    // tensor->dimensions
 }
 
 
@@ -26,9 +27,10 @@ struct NamedTensor *Tensor() {
         exit(0);
     }
 
-    tensor->addDimension = tensor_add_dimension;
     tensor->data = NULL;
+    tensor->dimension_nums = 0;
     tensor->dimensions = NULL;
+    tensor->addDimension = tensor_add_dimension;
 
     return tensor;
 }

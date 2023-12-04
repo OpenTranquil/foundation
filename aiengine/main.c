@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "autograd/grad.h"
+#include "model/model.h"
 #include "tensor/tensor.h"
 
 // f = (ax + b)^2
@@ -24,6 +25,17 @@ double fdx(double x, double a, double b) {
     return grad;
 }
 
+void minist() {
+    NamedTensor *tensor = Tensor();
+    tensor->addDimension(tensor, Dimension("batch_size", 28));
+    tensor->addDimension(tensor, Dimension("height", 28));
+    tensor->addDimension(tensor, Dimension("weight", 28));
+
+    NNModel *model = Model();
+    model->addLayer(model, Conv2D(RELU));
+    model->addLayer(model, MaxPolling());
+}
+
 int main(int argc, char *argv[]) {
     double av = 5.1f;
     double xv = 6.3f;
@@ -38,9 +50,6 @@ int main(int argc, char *argv[]) {
     printf("ACTUAL2 val: %f, grad:%f\n", Forword(fx), Backword(x));
 
 
-    NamedTensor *tensor = Tensor();
-    tensor->addDimension(tensor, Dimension("width", 32));
-    tensor->addDimension(tensor, Dimension("height", 32));
-    tensor->addDimension(tensor, Dimension("depth", 4));
+    minist();
     return 0;
 }

@@ -11,6 +11,7 @@ typedef struct DimensionDef {
 typedef struct DimensionDef *(*TensorAddDimension)(struct NamedTensor *tensor, struct DimensionDef *dimension);
 
 typedef struct NamedTensor {
+    uint64_t dimension_nums;
     struct Dimension *dimensions;
     double *data;
 
