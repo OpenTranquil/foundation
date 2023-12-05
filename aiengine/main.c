@@ -38,6 +38,14 @@ void minist() {
     model->addLayer(model, Flatten());
     model->addLayer(model, Dense(RELU));
     model->addLayer(model, Dense(SOFTMAX));
+
+    uint64_t epochs = 5;
+    uint64_t batch_size = 64;
+    float validation_split = 0.2;
+
+    model->compile(model, ADAM, CROSS_ENTROPY);
+    model->train(model, tensor, epochs, batch_size, validation_split);
+    model->evaluate(model);
 }
 
 int main(int argc, char *argv[]) {
