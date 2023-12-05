@@ -15,10 +15,31 @@ struct Layer *Conv2D(ActivationType type) {
     return layer;
 }
 
-struct Layer *MaxPolling() {
+struct Layer *MaxPooling2D() {
     struct Layer *layer = (struct Layer*)malloc(sizeof(Layer));
     if (layer == NULL) {
         printf("max polling layer alloc failed!\n");
+        exit(1);
+    }
+
+    return layer;
+}
+
+
+struct Layer *Flatten() {
+    struct Layer *layer = (struct Layer*)malloc(sizeof(Layer));
+    if (layer == NULL) {
+        printf("flatten layer alloc failed!\n");
+        exit(1);
+    }
+
+    return layer;
+}
+
+struct Layer *Dense(ActivationType actv) {
+    struct Layer *layer = (struct Layer*)malloc(sizeof(Layer));
+    if (layer == NULL) {
+        printf("dense layer alloc failed!\n");
         exit(1);
     }
 
@@ -29,7 +50,7 @@ struct Layer* model_add_layer(struct NNModel *model, struct Layer *layer) {
 
 }
 
-struct NNModel *Model() {
+struct NNModel *SequentialModel() {
     struct NNModel *model = (struct NNModel*)malloc(sizeof(NNModel));
     if (model == NULL) {
         printf("model alloc failed!\n");

@@ -31,9 +31,13 @@ void minist() {
     tensor->addDimension(tensor, Dimension("height", 28));
     tensor->addDimension(tensor, Dimension("weight", 28));
 
-    NNModel *model = Model();
+    NNModel *model = SequentialModel();
     model->addLayer(model, Conv2D(RELU));
-    model->addLayer(model, MaxPolling());
+    model->addLayer(model, MaxPooling2D());
+    model->addLayer(model, Conv2D(RELU));
+    model->addLayer(model, Flatten());
+    model->addLayer(model, Dense(RELU));
+    model->addLayer(model, Dense(SOFTMAX));
 }
 
 int main(int argc, char *argv[]) {
