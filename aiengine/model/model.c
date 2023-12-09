@@ -27,6 +27,8 @@ struct NNModel *SequentialModel() {
     }
 
     model->layers = NULL;
+    model->optmizer = NULL;
+
     model->addLayer = model_add_layer;
     model->compile = model_compile;
     model->fit = model_fit;

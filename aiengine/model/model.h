@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "../common/dlist.h"
 #include "layer.h"
+#include "../optimizer/optimizer.h"
 #include "../tensor/tensor.h"
 
 typedef enum {
@@ -23,6 +24,8 @@ typedef struct NNModel* (*ModelEvaluate)(struct NNModel *model);
 typedef struct NNModel {
     Layer *layers;
     ModelAddLayer addLayer;
+
+    Optimizer *optmizer;
 
     ModelCompile compile;
     ModelTrain fit;
