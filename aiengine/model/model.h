@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include "../common/dlist.h"
 #include "../tensor/tensor.h"
 
 typedef struct TupleU64 {
@@ -27,9 +28,35 @@ typedef enum {
     ADAM
 } OptmizerType;
 
+typedef struct LayerOperations {
+
+} LayerOperations;
+
 typedef struct Layer {
     ActivationType activation;
+    ListNode node;
+    LayerOperations ops;
 } Layer;
+
+typedef struct Conv2DLayer {
+    struct Layer base;
+    uint64_t filters;
+    TupleU64 *kernelSize;
+} Conv2DLayer;
+
+typedef struct MaxPooling2DLayer {
+    struct Layer base;
+    TupleU64 *kernelSize;
+} MaxPooling2DLayer;
+
+typedef struct FlattenLayer {
+    struct Layer base;
+} FlattenLayer;
+
+typedef struct DenseLayer {
+    struct Layer base;
+    uint64_t units;
+} DenseLayer;
 
 struct Layer *Conv2D(uint64_t filters, TupleU64 *kernel_size, ActivationType actv);
 
