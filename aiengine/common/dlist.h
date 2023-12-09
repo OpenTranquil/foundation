@@ -1,6 +1,5 @@
-
-#ifndef __COMMON_DLIST__
-#define __COMMON_DLIST__
+#ifndef __DLIST_H__
+#define __DLIST_H__
 
 #include <stddef.h>
 
@@ -39,4 +38,4 @@ static inline void dlist_insert(struct ListNode *dist, struct ListNode *item) {
 	}
 }
 
-#endif /* __COMMON_DLIST__ */
+#endif /* __DLIST_H__ */

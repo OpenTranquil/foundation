@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "tensor.h": "c"
+        "tensor.h": "c",
+        "dense.h": "c"
     }
 }

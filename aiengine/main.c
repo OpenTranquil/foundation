@@ -2,6 +2,11 @@
 #include <math.h>
 #include <stdlib.h>
 #include "autograd/grad.h"
+#include "model/layer.h"
+#include "model/layers/conv2d.h"
+#include "model/layers/maxpooling2d.h"
+#include "model/layers/flatten.h"
+#include "model/layers/dense.h"
 #include "model/model.h"
 #include "tensor/tensor.h"
 

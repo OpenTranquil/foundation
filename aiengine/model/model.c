@@ -3,49 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Layer *Conv2D(uint64_t filters, TupleU64 *kernel_size, ActivationType actv) {
-    struct Conv2DLayer *layer = (struct Conv2DLayer*)malloc(sizeof(Conv2DLayer));
-    if (layer == NULL) {
-        printf("conv2d layer alloc failed!\n");
-        exit(1);
-    }
-
-    layer->base.activation = actv;
-
-    return &layer->base;
-}
-
-struct Layer *MaxPooling2D(TupleU64 *kernel_size) {
-    struct MaxPooling2DLayer *layer = (struct MaxPooling2DLayer*)malloc(sizeof(MaxPooling2DLayer));
-    if (layer == NULL) {
-        printf("max polling layer alloc failed!\n");
-        exit(1);
-    }
-
-    return &layer->base;
-}
-
-
-struct Layer *Flatten() {
-    struct FlattenLayer *layer = (struct FlattenLayer*)malloc(sizeof(FlattenLayer));
-    if (layer == NULL) {
-        printf("flatten layer alloc failed!\n");
-        exit(1);
-    }
-
-    return &layer->base;
-}
-
-struct Layer *Dense(uint64_t units, ActivationType actv) {
-    struct DenseLayer *layer = (struct DenseLayer*)malloc(sizeof(DenseLayer));
-    if (layer == NULL) {
-        printf("dense layer alloc failed!\n");
-        exit(1);
-    }
-
-    return &layer->base;
-}
-
 struct Layer* model_add_layer(struct NNModel *model, struct Layer *layer) {
 
 }
