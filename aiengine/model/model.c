@@ -3,19 +3,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Layer *Conv2D(ActivationType type) {
+struct Layer *Conv2D(uint64_t filters, TupleU64 *kernel_size, ActivationType actv) {
     struct Layer *layer = (struct Layer*)malloc(sizeof(Layer));
     if (layer == NULL) {
         printf("conv2d layer alloc failed!\n");
         exit(1);
     }
 
-    layer->activation = type;
+    layer->activation = actv;
 
     return layer;
 }
 
-struct Layer *MaxPooling2D() {
+struct Layer *MaxPooling2D(TupleU64 *kernel_size) {
     struct Layer *layer = (struct Layer*)malloc(sizeof(Layer));
     if (layer == NULL) {
         printf("max polling layer alloc failed!\n");
@@ -36,7 +36,7 @@ struct Layer *Flatten() {
     return layer;
 }
 
-struct Layer *Dense(ActivationType actv) {
+struct Layer *Dense(uint64_t units, ActivationType actv) {
     struct Layer *layer = (struct Layer*)malloc(sizeof(Layer));
     if (layer == NULL) {
         printf("dense layer alloc failed!\n");
@@ -54,7 +54,7 @@ struct NNModel* model_compile(struct NNModel *model, OptmizerType optmizer, Loss
 
 }
 
-struct NNModel* model_train(struct NNModel *model, struct Tensor *data, uint64_t epochs, uint64_t batchSize, float validationSplit) {
+struct NNModel* model_fit(struct NNModel *model, struct Tensor *data, uint64_t epochs, uint64_t batchSize, float validationSplit) {
 
 }
 
@@ -72,7 +72,7 @@ struct NNModel *SequentialModel() {
     model->layers = NULL;
     model->addLayer = model_add_layer;
     model->compile = model_compile;
-    model->train = model_train;
+    model->fit = model_fit;
     model->evaluate = model_evaluate;
 
     return model;

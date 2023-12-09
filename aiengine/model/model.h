@@ -2,7 +2,17 @@
 #define __MODEL_H__
 
 #include <stdint.h>
+#include <stdlib.h>
 #include "../tensor/tensor.h"
+
+typedef struct TupleU64 {
+    uint64_t x;
+    uint64_t y;
+} TupleU64;
+
+static struct TupleU64 *Tuple(uint64_t x, uint64_t y) {
+    return (struct TupleU64*) malloc(sizeof(struct TupleU64));
+}
 
 typedef enum {
     RELU,
@@ -21,13 +31,13 @@ typedef struct Layer {
     ActivationType activation;
 } Layer;
 
-struct Layer *Conv2D(ActivationType actv);
+struct Layer *Conv2D(uint64_t filters, TupleU64 *kernel_size, ActivationType actv);
 
-struct Layer *MaxPooling2D();
+struct Layer *MaxPooling2D(TupleU64 *kernel_size);
 
 struct Layer *Flatten();
 
-struct Layer *Dense(ActivationType actv);
+struct Layer *Dense(uint64_t units, ActivationType actv);
 
 typedef struct Layer* (*ModelAddLayer)(struct NNModel *model, struct Layer *layer);
 typedef struct NNModel* (*ModelCompile)(struct NNModel *model, OptmizerType optmizer, LossFuncType lossFunc);
@@ -39,7 +49,7 @@ typedef struct NNModel {
     ModelAddLayer addLayer;
 
     ModelCompile compile;
-    ModelTrain train;
+    ModelTrain fit;
     ModelEvaluate evaluate;
 } NNModel;
 

@@ -32,19 +32,21 @@ void minist() {
     tensor->addDimension(tensor, Dimension("weight", 28));
 
     NNModel *model = SequentialModel();
-    model->addLayer(model, Conv2D(RELU));
-    model->addLayer(model, MaxPooling2D());
-    model->addLayer(model, Conv2D(RELU));
+    model->addLayer(model, Conv2D(32, Tuple(3, 3), RELU));
+    model->addLayer(model, MaxPooling2D(Tuple(2,2)));
+    model->addLayer(model, Conv2D(64, Tuple(3, 3), RELU));
+    model->addLayer(model, MaxPooling2D(Tuple(2,2)));
+    model->addLayer(model, Conv2D(64, Tuple(3, 3), RELU));
     model->addLayer(model, Flatten());
-    model->addLayer(model, Dense(RELU));
-    model->addLayer(model, Dense(SOFTMAX));
+    model->addLayer(model, Dense(64, RELU));
+    model->addLayer(model, Dense(10, SOFTMAX));
 
     uint64_t epochs = 5;
     uint64_t batch_size = 64;
     float validation_split = 0.2;
 
     model->compile(model, ADAM, CROSS_ENTROPY);
-    model->train(model, tensor, epochs, batch_size, validation_split);
+    model->fit(model, tensor, epochs, batch_size, validation_split);
     model->evaluate(model);
 }
 
